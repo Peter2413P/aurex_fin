@@ -74,3 +74,9 @@ desktop.ini
 # Storage/Data directories
 backend/storage/
 backend/uploads/
+backend/chroma_db_v2/
+chroma_db_v2/
+backend/onnx_models/
+*.bin
+*.onnx
+

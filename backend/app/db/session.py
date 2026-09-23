@@ -3,8 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # SQLite database file in the backend directory
-DB_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "knowledge.db")
-SQLALCHEMY_DATABASE_URL = "sqlite:///./knowledge_v2.db"
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "knowledge_v2.db")
+DB_FILE = DB_PATH
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH.replace(os.sep, '/')}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

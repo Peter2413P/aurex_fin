@@ -13,15 +13,6 @@ load_dotenv()
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
-# Lightweight schema migration for existing SQLite DBs
-try:
-    from sqlalchemy import text
-    with engine.connect() as conn:
-        conn.execute(text("ALTER TABLE voice_profiles ADD COLUMN provider_metadata_json TEXT DEFAULT '{}'"))
-        conn.commit()
-except Exception:
-    pass
-
 app = FastAPI(
     title="PersonaForge AI",
     description="Intelligent chatbot platform using RAG, local LLMs, and internet search.",

@@ -1,3 +1,15 @@
+export interface CitationItem {
+  id: string;
+  index: number;
+  source_id?: string;
+  source_name: string;
+  source_type: string;
+  source_url?: string | null;
+  page?: number | null;
+  chunk_index?: number | null;
+  snippet: string;
+}
+
 export interface SourceItem {
   type: string;
   title: string;
@@ -263,6 +275,64 @@ export async function getKnowledgeStatus(
   return handleResponse<KnowledgeStatus>(res);
 }
 
+export interface SearchMetadata {
+  language?: string;
+  intent?: string;
+  methods?: string[];
+  grade?: string;
+  confidence?: number;
+  attempts?: number;
+  sources_count?: number;
+}
+
+export interface SearchRequest {
+  persona_id: string;
+  query: string;
+  limit?: number;
+}
+
+export interface SearchResponse {
+  status: string;
+  query: string;
+  original_query: string;
+  normalized_query: string;
+  persona_id: string;
+  language: string;
+  intent: string;
+  entities: string[];
+  search_variants: string[];
+  search_methods: string[];
+  retrieved_chunks: Array<{
+    id: string;
+    content: string;
+    source_name: string;
+    source_type: string;
+    source_url?: string;
+    score?: number;
+  }>;
+  retrieval_metadata: Record<string, any>;
+  evidence_assessment: {
+    grade: string;
+    confidence_score: number;
+    rationale: string;
+    signals: Record<string, any>;
+    provider: string;
+  };
+  retry_count: number;
+  message?: string;
+}
+
+export async function executeSearch(data: SearchRequest): Promise<SearchResponse> {
+  const res = await fetchWithTimeout(`${API_URL}/search`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<SearchResponse>(res);
+}
+
 /**
  * Streaming chat
  */
@@ -271,7 +341,10 @@ export async function sendChatStream(
   message: string,
   history: { role: string; content: string }[],
   onToken: (token: string) => void,
-  onSources: (sources: SourceItem[]) => void
+  onSources: (sources: SourceItem[]) => void,
+  onSearchStatus?: (status: string) => void,
+  onSearchMetadata?: (metadata: SearchMetadata) => void,
+  onCitations?: (citations: CitationItem[]) => void
 ): Promise<void> {
   const res = await fetch(`${API_URL}/chat/stream`, {
     method: "POST",
@@ -346,6 +419,12 @@ export async function sendChatStream(
           onToken(data.content);
         } else if (data.type === "sources") {
           onSources(data.sources);
+        } else if (data.type === "search_status" && onSearchStatus) {
+          onSearchStatus(data.status);
+        } else if (data.type === "search_metadata" && onSearchMetadata) {
+          onSearchMetadata(data.metadata);
+        } else if (data.type === "citations" && onCitations) {
+          onCitations(data.citations);
         } else if (data.type === "error") {
           throw new Error(data.message);
         } else if (data.type === "done") {

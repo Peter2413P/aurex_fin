@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Response
 from pydantic import BaseModel
 from typing import List, Optional
 import os
@@ -119,7 +119,66 @@ def delete_persona(persona_id: str):
 
 @router.get("/health")
 def health_check():
-    return {"status": "ok"}
+    db_ok = True
+    try:
+        db = SessionLocal()
+        db.query(Persona).count()
+        db.close()
+    except Exception as e:
+        db_ok = False
+        
+    chroma_ok = True
+    try:
+        vs = get_vector_store()
+        _ = vs._collection.count()
+    except Exception:
+        chroma_ok = False
+
+    return {
+        "status": "ok" if db_ok and chroma_ok else "degraded",
+        "database": "online" if db_ok else "offline",
+        "chroma_db": "online" if chroma_ok else "offline",
+        "cache": "in-memory (no-redis)",
+        "gemini_available": bool(os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
+    }
+
+class SearchApiRequest(BaseModel):
+    persona_id: str
+    query: str
+    limit: Optional[int] = 5
+
+@router.post("/search")
+async def execute_search(request: SearchApiRequest):
+    try:
+        from app.services.agent_search_service import get_agent_search_service
+        service = get_agent_search_service()
+        response = service.search(persona_id=request.persona_id, query=request.query, limit=request.limit or 5)
+        return response.dict()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class GradeEvidenceApiRequest(BaseModel):
+    query: str
+    chunks: List[dict]
+
+@router.post("/evidence/grade")
+async def grade_evidence_api(request: GradeEvidenceApiRequest):
+    try:
+        from app.services.evidence_grading_service import get_evidence_grading_service, EvidenceChunk
+        service = get_evidence_grading_service()
+        evidence_chunks = [
+            EvidenceChunk(
+                content=c.get("content", ""),
+                source_name=c.get("source_name", "Unknown"),
+                source_url=c.get("source_url"),
+                score=c.get("score")
+            )
+            for c in request.chunks
+        ]
+        assessment = service.grade_evidence(request.query, evidence_chunks)
+        return assessment.dict()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/upload")
 async def upload_document(persona_id: str, file: UploadFile = File(...)):

@@ -1,7 +1,6 @@
 import json
 import re
 from app.rag.llm import get_llm
-from langchain_core.prompts import PromptTemplate
 
 def _clean_json_output(result: str) -> str:
     result = result.strip()
@@ -18,23 +17,19 @@ def detect_entity(source_title: str, content: str) -> dict:
     Detect the primary entity this document is about.
     """
     llm = get_llm()
-    prompt = PromptTemplate(
-        input_variables=["title", "content"],
-        template="""You are an AI tasked with identifying the primary entity (person, organization, etc.) that a document is about.
+    snippet = content[:2000] if content else source_title
+    prompt = f"""You are an AI tasked with identifying the primary entity (person, organization, etc.) that a document is about.
 Return a valid JSON object with EXACTLY this structure:
 {{
   "entity_name": "Primary Name",
   "aliases": ["Alias 1", "Alias 2"]
 }}
 
-Document Title: {title}
+Document Title: {source_title}
 Document Snippet:
-{content}
+{snippet}
 """
-    )
-    # Give it the first 2000 chars to avoid context limits
-    snippet = content[:2000] if content else source_title
-    response = llm.invoke(prompt.format(title=source_title, content=snippet))
+    response = llm.invoke(prompt)
     
     try:
         data = json.loads(_clean_json_output(response))
@@ -51,9 +46,7 @@ def detect_dataset_schema(entity_name: str, headers: list, sample_rows: list) ->
     Detect what a table represents (e.g. filmography, sports_stats).
     """
     llm = get_llm()
-    prompt = PromptTemplate(
-        input_variables=["entity", "headers", "rows"],
-        template="""Analyze this table about '{entity}' and determine its schema.
+    prompt = f"""Analyze this table about '{entity_name}' and determine its schema.
 Return a valid JSON object with EXACTLY this structure:
 {{
   "dataset_type": "string (e.g., filmography, awards, sports_statistics, career_timeline)",
@@ -64,16 +57,11 @@ Return a valid JSON object with EXACTLY this structure:
   "semantic_flags": ["list of explicit flags e.g. is_final_film, is_first_film, is_guest_appearance, is_cameo, is_multiple_role"]
 }}
 
-Table Headers: {headers}
+Table Headers: {json.dumps(headers)}
 Sample Rows (up to 3):
-{rows}
+{json.dumps(sample_rows[:3])}
 """
-    )
-    response = llm.invoke(prompt.format(
-        entity=entity_name, 
-        headers=json.dumps(headers),
-        rows=json.dumps(sample_rows[:3])
-    ))
+    response = llm.invoke(prompt)
     
     try:
         data = json.loads(_clean_json_output(response))
@@ -170,9 +158,8 @@ def extract_explicit_facts(entity_name: str, content: str) -> list:
     Extract key explicit facts (milestones, debuts, etc) directly from text.
     """
     llm = get_llm()
-    prompt = PromptTemplate(
-        input_variables=["entity", "content"],
-        template="""Extract explicit career facts, debuts, and milestones about '{entity}' from the text.
+    snippet = content[:3000]
+    prompt = f"""Extract explicit career facts, debuts, and milestones about '{entity_name}' from the text.
 Return a valid JSON object containing a "facts" array. Each fact must have:
 {{
   "facts": [
@@ -187,12 +174,9 @@ Return a valid JSON object containing a "facts" array. Each fact must have:
 }}
 
 Text:
-{content}
+{snippet}
 """
-    )
-    
-    snippet = content[:3000]
-    response = llm.invoke(prompt.format(entity=entity_name, content=snippet))
+    response = llm.invoke(prompt)
     
     try:
         data = json.loads(_clean_json_output(response))

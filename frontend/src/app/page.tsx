@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Globe, FileText, ChevronDown, ChevronRight, AlertTriangle, Mic, Volume2, Loader2, X, Check, Play, Pause } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { sendChatStream, ChatResponse, SourceItem, generateTTS } from "@/lib/api";
+import { sendChatStream, ChatResponse, SourceItem, generateTTS, SearchMetadata, CitationItem } from "@/lib/api";
+import { CitationList, EvidencePanel, RelatedKnowledge } from "@/components/GroundedAnswer";
 import { usePersona } from "@/components/PersonaProvider";
 
 type MessageRole = "user" | "assistant" | "system";
@@ -14,6 +15,9 @@ interface ChatMessage {
   role: MessageRole;
   content: string;
   sources?: SourceItem[];
+  citations?: CitationItem[];
+  searchMetadata?: SearchMetadata;
+  searchStatus?: string;
   isError?: boolean;
   audioUrl?: string;
   isGeneratingAudio?: boolean;
@@ -63,6 +67,52 @@ function SourceDropdown({ sources }: { sources: SourceItem[] }) {
   );
 }
 
+
+function SearchMetadataBadge({ metadata }: { metadata?: SearchMetadata }) {
+  const [isOpen, setIsOpen] = useState(false);
+  if (!metadata) return null;
+  const gradeColor = metadata.grade === "strong" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
+                     metadata.grade === "moderate" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
+                     metadata.grade === "limited" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
+                     "text-zinc-400 border-zinc-700 bg-zinc-800/40";
+  return (
+    <div className="mt-2 text-xs">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${gradeColor} hover:opacity-90 transition-all font-medium`}
+      >
+        <span>Evidence: {metadata.grade ? metadata.grade.toUpperCase() : 'SEARCHED'}</span>
+        {metadata.attempts && metadata.attempts > 1 ? <span>({metadata.attempts} attempts)</span> : null}
+        {isOpen ? <ChevronDown className="w-3 h-3 ml-0.5" /> : <ChevronRight className="w-3 h-3 ml-0.5" />}
+      </button>
+      {isOpen && (
+        <div className="mt-2 p-2.5 rounded-md bg-zinc-900/90 border border-zinc-800 text-zinc-300 space-y-1 text-xs">
+          <div className="flex justify-between">
+            <span className="text-zinc-400">Language:</span>
+            <span className="font-medium text-zinc-200">{metadata.language === "ta" ? "Tamil (ta)" : metadata.language === "tanglish" ? "Tanglish" : "English (en)"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-zinc-400">Search Strategy:</span>
+            <span className="font-medium text-zinc-200">Hybrid (Semantic + Lexical + Structured)</span>
+          </div>
+          {metadata.confidence !== undefined && (
+            <div className="flex justify-between">
+              <span className="text-zinc-400">Verification Confidence:</span>
+              <span className="font-medium text-zinc-200">{Math.round(metadata.confidence * 100)}%</span>
+            </div>
+          )}
+          {metadata.sources_count !== undefined && (
+            <div className="flex justify-between">
+              <span className="text-zinc-400">Sources Searched:</span>
+              <span className="font-medium text-zinc-200">{metadata.sources_count}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -92,6 +142,7 @@ export default function ChatPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playbackGenerationRef = useRef(0);
   const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
+  const [selectedCitation, setSelectedCitation] = useState<CitationItem | null>(null);
 
   useEffect(() => {
     return () => {
@@ -328,12 +379,27 @@ export default function ChatPage() {
           setIsLoading(false);
           finalContent += token;
           setMessages(prev => prev.map(m => 
-            m.id === assistantMsgId ? { ...m, content: m.content + token } : m
+            m.id === assistantMsgId ? { ...m, content: m.content + token, searchStatus: undefined } : m
           ));
         },
         (sources) => {
           setMessages(prev => prev.map(m => 
             m.id === assistantMsgId ? { ...m, sources } : m
+          ));
+        },
+        (status) => {
+          setMessages(prev => prev.map(m => 
+            m.id === assistantMsgId ? { ...m, searchStatus: status } : m
+          ));
+        },
+        (metadata) => {
+          setMessages(prev => prev.map(m => 
+            m.id === assistantMsgId ? { ...m, searchMetadata: metadata } : m
+          ));
+        },
+        (citations) => {
+          setMessages(prev => prev.map(m => 
+            m.id === assistantMsgId ? { ...m, citations } : m
           ));
         }
       );
