@@ -2,9 +2,13 @@ export interface QuestionItem {
   id: number;
   question: string;
   answer: string;
+  question_ta?: string;
+  answer_ta?: string;
+  question_tanglish?: string;
+  answer_tanglish?: string;
 }
 
-export const questions: QuestionItem[] = [
+export const tamilQuestions: QuestionItem[] = [
   {
     id: 1,
     question: "சிலப்பதிகாரத்தை இயற்றியவர் யார்?",
@@ -57,4 +61,58 @@ export const questions: QuestionItem[] = [
   }
 ];
 
+export const tanglishQuestions: QuestionItem[] = [
+  {
+    id: 1,
+    question: "Silappathikaarathai iyatriyavar yaar?",
+    answer: "Silappathikaarathai iyatriyavar Ilango Adigal aavaar. Ivar Chera mannar kudumbathai sernthavar ena koorappadugiradhu. Silappathikaaram Tamilin Aimperum Kaappiyangalil onraagaum. Kannagi matrum Kovalanin vaazhkaiyin moolamaaga aram matrum neethiyin mukkiyathuvathai indha nool eduthuraikkiradhu."
+  },
+  {
+    id: 2,
+    question: "Silappathikaarathin kadhanaayagi yaar?",
+    answer: "Silappathikaarathin kadhanaayagi Kannagi aavaar. Kannagi karpu, thunivu matrum neethiyin adaiyaalamaaga kaattappadugiraal. Than kanavan Kovalan aniyaayamaaga kollappattadhai arindha piragu, unmaiyai nirupikka Madurai arasanidam sendru neethi ketkiraal. Idhanaal Kannagiyin paaththiram Tamil kaappiya varalatril migavum mukkiyamaanadhaaga vilangugiradhu."
+  },
+  {
+    id: 3,
+    question: "Kannagiyin kanavar yaar?",
+    answer: "Kannagiyin kanavar Kovalan aavaar. Kovalan selvandha vaniga kudumbathai sernthavar. Maadhaviyudan erpatta thodarbin kaaranamaaga thanadhu selvathai izhandha piragu meendum Kannagiyidam thirumbugiraar. Pinnar iruvarum Maduraikku sendru pudhiya vaazhkaiyai thodanga muyarchi seygiraargal."
+  },
+  {
+    id: 4,
+    question: "Silappathikaarathil Kovalan sendra nagaram edhu?",
+    answer: "Kovalan Kannagiyudan Madurai nagarathirkku selgiraar. Angu Kannagiyin silambai vitru pudhiya vaazhkaiyai thodanga muyarchikkiraar. Aanaal andha silambu arasiyaarudaiya silambu ena thavaraaga karuthappattadhaal Kovalan kutravaaliyaaga karuthappadugiraar. Idhan vilaivaaga avar aniyaayamaaga thandikkappadugiraar."
+  },
+  {
+    id: 5,
+    question: "Kannagiyin silambil irundhadhu enna?",
+    answer: "Kannagiyin silambil maanikkak kargal irundhana. Kovalan Kannagiyin silambai virka muyandrapodhu, adhu arasiyaarudaiya silambudan thodarbudaiyadhaaga thavaraaga karuthappattadhu. Pinnar Kannagi thanadhu silambai udaiththu adhil maanikkangal iruppadhai nirubikkiraal. Idhan moolam Kovalan kutramatravan enbadhai velippaduthugiraal."
+  },
+  {
+    id: 6,
+    question: "Kovalanudan thodarbudaiya nadanak kalaignar yaar?",
+    answer: "Kovalanudan thodarbudaiya nadanak kalaignar Maadhavi aavaal. Maadhavi Puhar nagarathil pugazhpetra nadanak kalaignaraaga vilanginaal. Kovalan avaludan vaazhntha kaalathil thanadhu selvathai izhandhaan. Pinnar Kovalan Maadhaviyai vittu Kannagiyidam thirumbugiraar."
+  },
+  {
+    id: 7,
+    question: "Silappathikaarathin mudhal kaandam edhu?",
+    answer: "Silappathikaarathin mudhal kaandam Puharkkaandam aagum. Idhu Puhar nagarai maiyamaaga konda nigazhvugalai eduthuraikkiradhu. Kovalan, Kannagi matrum Maadhaviyin vaazhkaiyil nadakkum mukkiya nigazhvugal ippagudiyil idamperugindrana. Kovalan matrum Kannagiyin vaazhkaiyil erpadum maatrangalukkum idhu adithalamaaga amaigiradhu."
+  },
+  {
+    id: 8,
+    question: "Silappathikaarathin irandaavadhu kaandam edhu?",
+    answer: "Silappathikaarathin irandaavadhu kaandam Maduraikkaandam aagum. Idhil Kovalanum Kannagiyum Maduraikku sellum nigazhvugal mukkiyamaaga idamperugindrana. Kovalan aniyaayamaaga kollappaduvadhum, Kannagi Madurai arasanidam neethi ketpadhum ikkaandathin mukkiya nigazhvugalaaga amaigindrana. Kannagiyin neethikkaana poraattam ippagudiyil uchchathai adaigiradhu."
+  },
+  {
+    id: 9,
+    question: "Silappathikaarathin moondraavadhu kaandam edhu?",
+    answer: "Silappathikaarathin moondraavadhu kaandam Vanjikkaandam aagum. Idhu Chera naattaiyum Chera mannan Senguttuvanaiyum maiyamaaga kondulladhu. Kannagiyin sirappum Paththini vazhipaattin mukkiyathuvamum ikkaandathil eduthuraikkappadugindrana. Idhan moolam Silappathikaarathin kathai niraivup pagudhikku selgiradhu."
+  },
+  {
+    id: 10,
+    question: "Silappathikaarathil Kannagi evvaaru sirappikkappadugiraal?",
+    answer: "Silappathikaarathil Kannagi karpu, thunivu matrum neethiyin adaiyaalamaaga sirappikkappadugiraal. Than kanavan aniyaayamaaga kollappattadhai arindhavudan, unmaiyai nirupikka arasanidam neradiyaaga sendru neethi ketkiraal. Thanadhu silambin moolam Kovalan kutramatravan enbadhai nirupikkiraal. Idhanaal Kannagi Tamilargalin panpaatil mukkiyamaana pen paaththiramaagavum Paththini theyvamaagavum potrappadugiraal."
+  }
+];
+
+export const questions = tamilQuestions;
 export default questions;
