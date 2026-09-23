@@ -56,7 +56,7 @@ export function Sidebar() {
         <div className="bg-emerald-600 p-2 rounded-lg">
           <Layers className="w-5 h-5 text-white" />
         </div>
-        <h1 className="font-semibold text-lg tracking-tight">PersonaForge</h1>
+        <h1 className="font-semibold text-lg tracking-tight">Knowledge Assistant</h1>
       </div>
       
       <div className="p-4 border-b border-zinc-800/50">

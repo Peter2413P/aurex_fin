@@ -1,6 +1,6 @@
-# PersonaForge AI - Frontend
+# Knowledge Assistant - Frontend
 
-This is the Next.js frontend for PersonaForge AI.
+This is the Next.js frontend for Knowledge Assistant.
 
 For full project details and instructions on running both the backend and frontend, please refer to the **root [README.md](../README.md)**.
 

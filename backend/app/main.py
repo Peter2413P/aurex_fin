@@ -14,9 +14,9 @@ load_dotenv()
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="PersonaForge AI",
-    description="Intelligent chatbot platform using RAG, local LLMs, and internet search.",
-    version="0.1.0",
+    title="Knowledge Assistant API",
+    description="Universal Multilingual Knowledge Discovery Platform using Hybrid RAG, Evidence Grading, Local LLMs, and Internet Search.",
+    version="1.0.0",
 )
 
 # Configure CORS for frontend access

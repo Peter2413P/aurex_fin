@@ -1,6 +1,6 @@
-# PersonaForge AI
+# Knowledge Assistant
 
-PersonaForge AI is an intelligent chatbot platform that combines Retrieval-Augmented Generation (RAG), local Large Language Models (LLMs), and internet search to provide highly accurate answers.
+Knowledge Assistant is an advanced universal knowledge discovery and grounded RAG platform with multilingual OCR (Tamil, English, Tanglish), hybrid retrieval, evidence grading, and local LLM execution.
 
 ## Prerequisites
 

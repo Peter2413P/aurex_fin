@@ -118,7 +118,7 @@ export default function ChatPage() {
     {
       id: "welcome",
       role: "assistant",
-      content: "Hello! I am **PersonaForge AI**. Ask me anything, and I'll search through your knowledge base or the internet to find the answer."
+      content: "Hello! I am **Knowledge Assistant**. Ask me anything, and I'll search through your knowledge base or the internet to find the answer."
     }
   ]);
   const { activePersona } = usePersona();
@@ -166,7 +166,7 @@ export default function ChatPage() {
         {
           id: "welcome",
           role: "assistant",
-          content: `Hello! I am **PersonaForge AI** (${activePersona.name}). Ask me anything, and I'll search through your knowledge base or the internet to find the answer.`
+          content: `Hello! I am **Knowledge Assistant** (${activePersona.name}). Ask me anything, and I'll search through your knowledge base or the internet to find the answer.`
         }
       ]);
     } else {
@@ -174,7 +174,7 @@ export default function ChatPage() {
         {
           id: "welcome",
           role: "assistant",
-          content: `Hello! I am **PersonaForge AI**. Please select or create a chat from the sidebar to begin.`
+          content: `Hello! I am **Knowledge Assistant**. Please select or create a chat from the sidebar to begin.`
         }
       ]);
     }

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 import { PersonaProvider } from "@/components/PersonaProvider";
 
 export const metadata: Metadata = {
-  title: "PersonaForge AI",
-  description: "Intelligent document + internet RAG chatbot.",
+  title: "Knowledge Assistant",
+  description: "Universal Multilingual Knowledge Discovery & Grounded Search Assistant.",
 };
 
 export default function RootLayout({
