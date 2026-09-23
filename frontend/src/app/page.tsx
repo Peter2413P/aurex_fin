@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import { sendChatStream, ChatResponse, SourceItem, generateTTS, SearchMetadata, CitationItem } from "@/lib/api";
 import { CitationList, EvidencePanel, RelatedKnowledge } from "@/components/GroundedAnswer";
 import { usePersona } from "@/components/PersonaProvider";
+import { questions as sampleQuestions } from "@/data/silappathikaram";
 
 type MessageRole = "user" | "assistant" | "system";
 
@@ -504,6 +505,26 @@ export default function ChatPage() {
               </div>
             </div>
           ))}
+
+          {messages.length <= 1 && (
+            <div className="mt-4 pt-4 border-t border-zinc-800/40 space-y-3">
+              <div className="text-xs font-medium text-zinc-400">Sample Questions (சிலப்பதிகாரம்):</div>
+              <div className="flex flex-wrap gap-2">
+                {sampleQuestions.slice(0, 6).map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setInput(item.question);
+                    }}
+                    className="text-xs bg-zinc-900/80 hover:bg-zinc-850 hover:border-emerald-500/40 text-zinc-300 hover:text-white px-3 py-1.5 rounded-lg border border-zinc-800 transition-all text-left"
+                  >
+                    {item.question}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
       </div>
