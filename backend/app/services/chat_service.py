@@ -27,10 +27,14 @@ async def stream_chat_response(persona_id: str, message: str, history: List[Dict
         yield f"data: {json.dumps({'type': 'sources', 'sources': [{'type': 'UPLOAD', 'title': 'சிலப்பதிகாரம் (Silappathikaram)', 'content': default_ans, 'url': ''}]})}\n\n"
         yield f"data: {json.dumps({'type': 'search_metadata', 'metadata': {'language': 'ta' if is_tamil_unicode(message) else 'tanglish', 'intent': 'FACTUAL', 'methods': ['structured_kb'], 'grade': 'strong', 'confidence': 1.0, 'attempts': 1, 'sources_count': 1}})}\n\n"
         
-        words = default_ans.split(" ")
-        for i, word in enumerate(words):
-            token = word + (" " if i < len(words) - 1 else "")
-            yield f"data: {json.dumps({'type': 'token', 'content': token})}\n\n"
+        lines = default_ans.split("\n\n")
+        for i, line in enumerate(lines):
+            words = line.split(" ")
+            for j, word in enumerate(words):
+                token = word + (" " if j < len(words) - 1 else "")
+                yield f"data: {json.dumps({'type': 'token', 'content': token})}\n\n"
+            if i < len(lines) - 1:
+                yield f"data: {json.dumps({'type': 'token', 'content': '\n\n'})}\n\n"
             
         yield f"data: {json.dumps({'type': 'done'})}\n\n"
         db.close()
