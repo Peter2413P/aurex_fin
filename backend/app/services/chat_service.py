@@ -1,4 +1,5 @@
 import json
+import asyncio
 from typing import List, Dict, AsyncGenerator
 from app.rag.database import get_vector_store
 from app.rag.llm import get_llm
@@ -23,7 +24,8 @@ async def stream_chat_response(persona_id: str, message: str, history: List[Dict
     # Check for hardcoded default answer first
     default_ans = get_default_answer(message)
     if default_ans:
-        yield f"data: {json.dumps({'type': 'search_status', 'status': 'Retrieving knowledge...'})}\n\n"
+        yield f"data: {json.dumps({'type': 'search_status', 'status': 'Understanding query and searching knowledge sources...'})}\n\n"
+        await asyncio.sleep(2.0)
         yield f"data: {json.dumps({'type': 'sources', 'sources': [{'type': 'UPLOAD', 'title': 'சிலப்பதிகாரம் (Silappathikaram)', 'content': default_ans, 'url': ''}]})}\n\n"
         yield f"data: {json.dumps({'type': 'search_metadata', 'metadata': {'language': 'ta' if is_tamil_unicode(message) else 'tanglish', 'intent': 'FACTUAL', 'methods': ['structured_kb'], 'grade': 'strong', 'confidence': 1.0, 'attempts': 1, 'sources_count': 1}})}\n\n"
         
@@ -33,8 +35,10 @@ async def stream_chat_response(persona_id: str, message: str, history: List[Dict
             for j, word in enumerate(words):
                 token = word + (" " if j < len(words) - 1 else "")
                 yield f"data: {json.dumps({'type': 'token', 'content': token})}\n\n"
+                await asyncio.sleep(0.015)
             if i < len(lines) - 1:
                 yield f"data: {json.dumps({'type': 'token', 'content': '\n\n'})}\n\n"
+                await asyncio.sleep(0.05)
             
         yield f"data: {json.dumps({'type': 'done'})}\n\n"
         db.close()
