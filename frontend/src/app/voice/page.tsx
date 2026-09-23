@@ -301,9 +301,9 @@ export default function VoiceSettingsPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-zinc-950 text-zinc-100">
         <Mic className="w-12 h-12 text-zinc-600 mb-4 animate-bounce" />
-        <h2 className="text-xl font-semibold mb-2">No Active Persona Selected</h2>
+        <h2 className="text-xl font-semibold mb-2">No Active Chat Selected</h2>
         <p className="text-zinc-400 text-sm max-w-md mb-6">
-          Please select or create a persona in the sidebar to configure its voice identity and cloning settings.
+          Please select or create a chat in the sidebar to configure voice identity and cloning settings.
         </p>
       </div>
     );
@@ -317,11 +317,11 @@ export default function VoiceSettingsPage() {
         <div className="flex items-center justify-between border-b border-zinc-800 pb-6">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl font-bold tracking-tight">Persona Voice Identity & Acoustic Engine</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Voice Identity & Acoustic Engine</h1>
               {getStatusBadge(profile?.status)}
             </div>
             <p className="text-zinc-400 text-sm">
-              Upload speech recordings for <span className="text-emerald-400 font-semibold">{activePersona.name}</span> to clone their vocal identity, analyze acoustic timbre, and evaluate speech synthesis quality.
+              Upload speech recordings for <span className="text-emerald-400 font-semibold">{activePersona.name}</span> to configure vocal identity, analyze acoustic timbre, and synthesize speech.
             </p>
           </div>
           <button

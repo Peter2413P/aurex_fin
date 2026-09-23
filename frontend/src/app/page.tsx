@@ -174,7 +174,7 @@ export default function ChatPage() {
         {
           id: "welcome",
           role: "assistant",
-          content: `Hello! I am **PersonaForge AI**. Ask me anything, and I'll search through your knowledge base or the internet to find the answer.`
+          content: `Hello! I am **PersonaForge AI**. Please select or create a chat from the sidebar to begin.`
         }
       ]);
     }
@@ -565,8 +565,8 @@ export default function ChatPage() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask anything..."
-                  disabled={isLoading}
+                  placeholder={activePersona ? "Ask anything..." : "Select or create a chat to begin..."}
+                  disabled={isLoading || !activePersona}
                   rows={1}
                   className="w-full max-h-48 min-h-[44px] bg-transparent resize-none border-0 focus:ring-0 text-zinc-100 p-3 disabled:opacity-50 outline-none"
                   style={{ overflow: "hidden" }}

@@ -60,7 +60,7 @@ export function Sidebar() {
       </div>
       
       <div className="p-4 border-b border-zinc-800/50">
-        <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Active Persona</div>
+        <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Active Chat</div>
         
         {isLoading ? (
            <div className="text-sm text-zinc-500 animate-pulse">Loading...</div>
@@ -74,7 +74,7 @@ export function Sidebar() {
                 setActivePersona(found || null);
               }}
             >
-              <option value="" disabled>Select a Persona</option>
+              <option value="" disabled>Select a Chat</option>
               {personas.map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -85,14 +85,14 @@ export function Sidebar() {
                 onClick={() => setIsCreating(true)}
                 className="w-full flex items-center justify-center gap-2 py-1.5 text-xs text-zinc-400 hover:text-emerald-400 border border-dashed border-zinc-700 hover:border-emerald-500 rounded transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" /> New Persona
+                <Plus className="w-3.5 h-3.5" /> New Chat
               </button>
             ) : (
               <div className="flex gap-2 items-center mt-2">
                 <input 
                   type="text" 
                   autoFocus
-                  placeholder="Name..." 
+                  placeholder="Chat Name..." 
                   className="flex-1 bg-zinc-900 border border-zinc-700 text-xs p-1.5 rounded"
                   value={newPersonaName}
                   onChange={e => setNewPersonaName(e.target.value)}
@@ -107,7 +107,7 @@ export function Sidebar() {
             {activePersona && (
               <div className="flex justify-end pt-1">
                 <button 
-                  onClick={() => confirm(`Delete persona ${activePersona.name}?`) && removePersona(activePersona.id)}
+                  onClick={() => confirm(`Delete chat "${activePersona.name}"?`) && removePersona(activePersona.id)}
                   className="text-xs flex items-center gap-1 text-red-500/70 hover:text-red-400 transition-colors"
                 >
                   <Trash2 className="w-3 h-3" /> Delete

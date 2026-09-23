@@ -242,6 +242,12 @@ export default function KnowledgeBasePage() {
               <AlertCircle className="w-5 h-5 mr-3" />
               {error}
             </div>
+          ) : !activePersona ? (
+            <div className="text-center p-12 bg-zinc-950/30 border border-zinc-800 rounded-xl">
+              <FileType className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
+              <p className="text-zinc-300 font-medium">No Active Chat Selected</p>
+              <p className="text-zinc-500 text-xs mt-1">Please select or create a chat in the sidebar to manage knowledge sources.</p>
+            </div>
           ) : documents.length === 0 ? (
             <div className="text-center p-12 bg-zinc-950/30 border border-zinc-800 rounded-xl">
               <FileType className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
